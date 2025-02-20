@@ -3,6 +3,7 @@ package org.acme.service;
 import jakarta.inject.Inject;
 import java.util.List;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.acme.repository.BodyRepository;
 import org.acme.model.Body;
@@ -10,6 +11,14 @@ import org.acme.model.Body;
 @ApplicationScoped
 public class NBodyService {
     @Inject BodyRepository bodyRepository;
+
+    @PostConstruct
+    void init() {
+        if (bodyRepository.getLength() == 0) { // Vérifie si la base est vide
+            bodyRepository.addBody(new Body(5.972e24, 0.0, 0.0, 0.0, 0.0));
+            bodyRepository.addBody(new Body(6.417e23, 227.9e6, 0, 0, 24.1));
+        }
+    }
 
     public List<Body> computeNextStep() {
         double dt = 0.1;              // Pas de temps

@@ -12,4 +12,12 @@ public class Body {
     public Long id;
     
     public double x, y, vx, vy, mass;
+
+    public Body(double mass, double x, double y, double vx, double vy) {
+        this.mass = mass;
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+    }
 }

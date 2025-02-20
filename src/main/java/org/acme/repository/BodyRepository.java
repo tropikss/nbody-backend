@@ -22,6 +22,10 @@ public class BodyRepository {
         bodies.clear();
     }
 
+    public int getLength() {
+        return bodies.size();
+    }
+
     public void setAll(List<Body> newBodies) {
         bodies = newBodies;
     }
