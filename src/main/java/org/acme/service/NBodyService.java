@@ -15,18 +15,23 @@ public class NBodyService {
     @PostConstruct
     void init() {
         if (bodyRepository.getLength() == 0) { // Vérifie si la base est vide
-            bodyRepository.addBody(new Body(5.972e24, 0.0, 0.0, 0.0, 0.0));
-            bodyRepository.addBody(new Body(6.417e23, 227.9e6, 0, 0, 24.1));
+            bodyRepository.addBody(new Body(500, 250, 250, 0.0, 0.0));
+
+// Ajoute quelques planètes avec des positions et vitesses initiales différentes
+            bodyRepository.addBody(new Body(10, 100, 100, 0.0, 0.1));
+            bodyRepository.addBody(new Body(10, 400, 100, 0.0, -0.1));
+            bodyRepository.addBody(new Body(10, 100, 400, 0.1, 0.0));
+            bodyRepository.addBody(new Body(10, 400, 400, -0.1, 0.0));
         }
     }
 
     public List<Body> computeNextStep() {
         double dt = 0.1;              // Pas de temps
-        double G = 6.67430e-11;         // Constante gravitationnelle (peut être ajustée pour la simulation)
-        double epsilon = 1e-3;          // Petite valeur pour éviter la division par zéro
-        List<Body> bodies = bodyRepository.listAll(); // Ici, tes corps sont stockés en mémoire
-    
-        // Calcul des nouvelles vitesses en fonction des forces gravitationnelles
+        double G = 0.1;               // Constante gravitationnelle "toy" pour simulation visuelle
+        double epsilon = 1e-3;        // Pour éviter la division par zéro
+        List<Body> bodies = bodyRepository.listAll(); // Récupération des corps depuis le repository
+
+        // Calcul des accélérations et mises à jour des vitesses
         for (Body b : bodies) {
             double ax = 0;
             double ay = 0;
@@ -35,9 +40,8 @@ public class NBodyService {
                     double dx = other.x - b.x;
                     double dy = other.y - b.y;
                     double distance = Math.sqrt(dx * dx + dy * dy) + epsilon;
-                    // Calcul de la force : F = G * m1 * m2 / distance²
                     double force = G * b.mass * other.mass / (distance * distance);
-                    // Accélération = force / masse, direction vers other
+                    // L'accélération est dans la direction du vecteur (dx, dy)
                     ax += force * dx / (distance * b.mass);
                     ay += force * dy / (distance * b.mass);
                 }
@@ -46,14 +50,35 @@ public class NBodyService {
             b.vx += ax * dt;
             b.vy += ay * dt;
         }
-        
+
         // Mise à jour des positions en fonction des vitesses
         for (Body b : bodies) {
             b.x += b.vx * dt;
             b.y += b.vy * dt;
+
+            // Gestion des rebonds pour rester dans le canvas 500x500
+            if (b.x < 0) {
+                b.x = 0;
+                b.vx = -b.vx;
+            }
+            if (b.x > 500) {
+                b.x = 500;
+                b.vx = -b.vx;
+            }
+            if (b.y < 0) {
+                b.y = 0;
+                b.vy = -b.vy;
+            }
+            if (b.y > 500) {
+                b.y = 500;
+                b.vy = -b.vy;
+            }
         }
+
         bodyRepository.setAll(bodies);
         return bodies;
     }
-    
+
+
+
 }
