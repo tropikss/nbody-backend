@@ -10,6 +10,17 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class BodyRepository {
     private List<Body> bodies = new ArrayList<>();
 
+    private double speed = 0.1;
+
+    public double getSpeed() {
+        return speed;
+    }
+    
+    public void setSpeed(double speed) {
+        System.out.println("Speed set to " + speed);
+        this.speed = speed;
+    }
+
     public List<Body> listAll() {
         return bodies;
     }
