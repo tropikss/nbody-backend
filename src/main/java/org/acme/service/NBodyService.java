@@ -26,8 +26,8 @@ public class NBodyService {
     }
 
     public List<Body> computeNextStep() {
-        double dt = 0.1;              // Pas de temps
-        double G = 0.1;               // Constante gravitationnelle "toy" pour simulation visuelle
+        double dt = 1.0;              // Pas de temps
+        double G = 1.0;               // Constante gravitationnelle "toy" pour simulation visuelle
         double epsilon = 1e-3;        // Pour éviter la division par zéro
         List<Body> bodies = bodyRepository.listAll(); // Récupération des corps depuis le repository
 

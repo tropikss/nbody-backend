@@ -16,15 +16,18 @@ public class NBodyWebsocketTest {
     @BeforeEach
     void setup() throws Exception {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        session = container.connectToServer(TestClient.class, URI.create("ws://localhost:8080/ws"));
+
+        // Use port 8081 since Quarkus runs on this port in test mode
+        session = container.connectToServer(TestClient.class, URI.create("ws://localhost:8081/ws"));
     }
+
 
     @Test
     void testWebSocketReceivesBodies() throws Exception {
         session.getBasicRemote().sendText("[getBodies]");
-        Thread.sleep(1000); // Attendre la réponse
+        Thread.sleep(1000); // Wait for response
 
-        assertTrue(TestClient.receivedMessage.contains("x"), "Réponse doit contenir une position");
+        assertTrue(TestClient.receivedMessage.contains("x"), "Response should contain body position data");
     }
 
     @AfterEach
